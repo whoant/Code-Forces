@@ -1,0 +1,85 @@
+#include <bits/stdc++.h>
+#include <cstdio>
+using namespace std;
+
+typedef pair<int, int> pii;
+
+
+int n, m, a, b, w;
+
+vector<pii> adj;
+
+//first => do dai
+//second => dinh toi
+
+void Dijkstra(int start)
+{
+    bool visited[n+10];
+    int dis[n+10];
+    int pre[n+10];
+
+    for (int i = 0; i < n + 10; i++)
+    {
+        dis[i] = INT_MAX;
+        //visited[i] = false;
+        pre[i] = -1;
+
+    }
+
+    dis[start] = 0;
+    pre[start] = -1;
+
+    priority_queue<pair<int, int>> q;
+    q.push({0, start});
+
+    while(q.empty() == false)
+    {
+        int currentIndex = q.top().second;
+        q.pop();
+        for (auto v:adj[currentIndex])
+        {
+            int currentTarget = v.first;
+            int currentDis = v.second;
+
+            if (dis[currentTarget] > dis[currentIndex] + currentDis)
+            {
+                dis[currentTarget] = dis[currentIndex] + currentDis;
+                q.push({dis[currentTarget], currentTarget});
+                pre[currentTarget] = currentIndex;
+            }
+        }
+    }
+
+    vector<int> res;
+
+    for (int i = n; i != -1; i = pre[i]) res.push_back(i);
+
+    if (res[0] == n && res[res.size() - 1] == start)
+    {
+            for (int i = res.size() - 1; i >= 0; i--) cout << res[i] << " ";
+            return;
+    }
+
+    cout << -1;
+
+}
+
+
+
+
+int main()
+{
+    //freopen("input.txt", "r", stdin);
+    cin >> n >> m;
+    for (int i = 0; i < m; i++)
+    {
+        cin >> a >> b >> w;
+        adj[a].push_back({b, w});
+        adj[b].push_back({a, w});
+    }
+
+    Dijkstra(1);
+
+
+    return 0;
+}
